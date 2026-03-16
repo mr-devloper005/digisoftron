@@ -4,6 +4,9 @@ import type { Listing } from '@/types/post'
 
 export async function generateStaticParams() {
   const posts = await fetchAllPosts()
+  if (!posts.length) {
+    return [{ slug: "placeholder" }]
+  }
   return posts.map((post) => ({ slug: post.slug }))
 }
 
