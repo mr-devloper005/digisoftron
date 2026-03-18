@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { ArrowRight, CalendarDays, CircleCheckBig, Mail, ShieldCheck, Sparkles } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useAuthStore } from '@/lib/stores/auth-store'
+import { useTenant } from '@/lib/tenant/context'
 
 interface ContactMessage {
   subject: string
@@ -15,6 +16,7 @@ interface ContactMessage {
 export default function DashboardPage() {
   const router = useRouter()
   const { session, signOut } = useAuthStore()
+  const { brand } = useTenant()
   const [messages, setMessages] = useState<ContactMessage[]>([])
 
   useEffect(() => {
@@ -123,7 +125,7 @@ export default function DashboardPage() {
             </Link>
             <Link href="/galleries" className="group rounded-lg border border-border p-4 transition-colors hover:bg-muted/50">
               <p className="font-medium">View galleries</p>
-              <p className="mt-1 text-sm text-muted-foreground">Discover visual collections and creators.</p>
+              <p className="mt-1 text-sm text-muted-foreground">Explore {brand.name} visual collections and creators.</p>
               <p className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-primary">
                 Browse
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
@@ -165,4 +167,3 @@ export default function DashboardPage() {
     </div>
   )
 }
-

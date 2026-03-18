@@ -8,12 +8,14 @@ import { Input } from '@/components/ui/input'
 import { Skeleton } from '@/components/ui/skeleton'
 import { PostCard } from '@/components/cards/post-card'
 import { useSearch } from '@/lib/hooks/use-posts'
+import { useTenant } from '@/lib/tenant/context'
 
 function SearchResults() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const initialQuery = searchParams.get('q') || ''
   const [query, setQuery] = useState(initialQuery)
+  const { search } = useTenant()
 
   useEffect(() => {
     setQuery(initialQuery)
@@ -50,22 +52,20 @@ function SearchResults() {
             type="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search listings, agencies, services, products..."
+            placeholder={search.placeholder}
             className="h-12 pl-12"
           />
         </div>
         <p className="mt-3 text-sm text-muted-foreground">
-          Results update instantly after you type two or more characters.
+          {search.helperText}
         </p>
       </div>
 
       {!trimmedQuery ? (
         <div className="flex flex-col items-center justify-center py-20 text-center">
           <SearchIcon className="h-12 w-12 text-muted-foreground/50" />
-          <h2 className="mt-4 text-xl font-semibold">Search listings</h2>
-          <p className="mt-2 text-muted-foreground">
-            Search digisoftron.com for services, agencies, products, and local businesses.
-          </p>
+          <h2 className="mt-4 text-xl font-semibold">{search.emptyTitle}</h2>
+          <p className="mt-2 text-muted-foreground">{search.emptyDescription}</p>
         </div>
       ) : isLoading ? (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -76,7 +76,7 @@ function SearchResults() {
       ) : !posts || posts.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 text-center">
           <SearchIcon className="h-12 w-12 text-muted-foreground/50" />
-          <h2 className="mt-4 text-xl font-semibold">No results found</h2>
+          <h2 className="mt-4 text-xl font-semibold">{search.noResultsTitle}</h2>
           <p className="mt-2 text-muted-foreground">
             No listings match your search for &quot;{trimmedQuery}&quot;.
           </p>
@@ -102,7 +102,7 @@ export default function SearchPage() {
     <div className="py-8 lg:py-12">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <h1 className="mb-8 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-          Search listings
+          {search.heading}
         </h1>
 
         <Suspense

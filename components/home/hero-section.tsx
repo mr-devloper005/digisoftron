@@ -7,14 +7,20 @@ import { motion } from 'framer-motion'
 import { Search, ArrowRight, Building2, MapPin, ShieldCheck } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
+import { useTenant } from '@/lib/tenant/context'
 
-const popularSearches = ['SEO agency', 'Web development', 'Digital marketing', 'Local listing', 'SaaS tools']
+const iconMap = {
+  building: Building2,
+  map: MapPin,
+  shield: ShieldCheck,
+}
 
 export function HeroSection() {
   const [searchQuery, setSearchQuery] = useState('')
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
+  const { hero } = useTenant()
 
   const trimmedQuery = useMemo(() => searchQuery.trim(), [searchQuery])
 
@@ -69,7 +75,7 @@ export function HeroSection() {
             className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm font-medium text-white/85 backdrop-blur"
           >
             <ShieldCheck className="h-4 w-4" />
-            Verified listings on digisoftron.com
+            {hero.badge}
           </motion.p>
 
           <motion.h1
@@ -78,7 +84,7 @@ export function HeroSection() {
             transition={{ duration: 0.5 }}
             className="mt-6 text-balance text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl"
           >
-            Find trusted digital services, local businesses, and growth-ready listings
+            {hero.title}
           </motion.h1>
 
           <motion.p
@@ -87,7 +93,7 @@ export function HeroSection() {
             transition={{ duration: 0.5, delay: 0.1 }}
             className="mx-auto mt-6 max-w-2xl text-pretty text-lg text-white/72 sm:text-xl"
           >
-            digisoftron.com is now a listing-first marketplace. Browse agencies, consultants, products, and service providers with live search and direct detail pages.
+            {hero.description}
           </motion.p>
 
           <motion.form
@@ -101,7 +107,7 @@ export function HeroSection() {
               <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-500" />
               <Input
                 type="search"
-                placeholder="Search listings, services, agencies, tools..."
+                placeholder={hero.searchPlaceholder}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="h-14 w-full rounded-full border-0 bg-white pl-12 pr-14 text-base text-foreground shadow-lg placeholder:text-slate-400 focus-visible:ring-2 focus-visible:ring-white/50"
@@ -124,7 +130,7 @@ export function HeroSection() {
             className="mt-6 flex flex-wrap items-center justify-center gap-2"
           >
             <span className="text-sm text-white/50">Popular:</span>
-            {popularSearches.map((term) => (
+            {hero.popularSearches.map((term) => (
               <button
                 key={term}
                 onClick={() => router.push(`/search?q=${encodeURIComponent(term)}`)}
@@ -141,27 +147,18 @@ export function HeroSection() {
             transition={{ duration: 0.5, delay: 0.35 }}
             className="mt-10 grid gap-4 sm:grid-cols-3"
           >
-            <div className="rounded-2xl border border-white/15 bg-white/10 p-4 text-left backdrop-blur">
-              <div className="flex items-center gap-2 text-sm font-medium text-white">
-                <Building2 className="h-4 w-4" />
-                Service Providers
-              </div>
-              <p className="mt-2 text-sm text-white/70">Agencies, consultants, developers, and niche operators.</p>
-            </div>
-            <div className="rounded-2xl border border-white/15 bg-white/10 p-4 text-left backdrop-blur">
-              <div className="flex items-center gap-2 text-sm font-medium text-white">
-                <MapPin className="h-4 w-4" />
-                Local + Global
-              </div>
-              <p className="mt-2 text-sm text-white/70">Structured listings with location, pricing, ratings, and highlights.</p>
-            </div>
-            <div className="rounded-2xl border border-white/15 bg-white/10 p-4 text-left backdrop-blur">
-              <div className="flex items-center gap-2 text-sm font-medium text-white">
-                <ShieldCheck className="h-4 w-4" />
-                Live Search
-              </div>
-              <p className="mt-2 text-sm text-white/70">Instant search routes visitors to relevant results as they type.</p>
-            </div>
+            {hero.highlights.map((highlight) => {
+              const Icon = iconMap[highlight.icon]
+              return (
+                <div key={highlight.title} className="rounded-2xl border border-white/15 bg-white/10 p-4 text-left backdrop-blur">
+                  <div className="flex items-center gap-2 text-sm font-medium text-white">
+                    <Icon className="h-4 w-4" />
+                    {highlight.title}
+                  </div>
+                  <p className="mt-2 text-sm text-white/70">{highlight.description}</p>
+                </div>
+              )
+            })}
           </motion.div>
         </div>
       </div>

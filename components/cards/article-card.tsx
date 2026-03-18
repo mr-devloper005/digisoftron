@@ -22,7 +22,7 @@ export function ArticleCard({ article, className, priority = false, delay = 0 }:
       <Link href={`/posts/${article.slug}`} className="block">
         <article className="overflow-hidden rounded-xl border border-border bg-card shadow-sm transition-shadow duration-300 group-hover:shadow-lg">
           {/* Cover Image */}
-          <div className="relative aspect-[16/10] overflow-hidden">
+          <div className="relative overflow-hidden">
             <Image
               src={article.coverImage}
               alt={article.title}

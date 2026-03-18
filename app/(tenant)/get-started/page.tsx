@@ -6,10 +6,12 @@ import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useAuthStore } from '@/lib/stores/auth-store'
+import { useTenant } from '@/lib/tenant/context'
 
 export default function GetStartedPage() {
   const router = useRouter()
   const { signUp, session } = useAuthStore()
+  const { brand } = useTenant()
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -41,7 +43,7 @@ export default function GetStartedPage() {
   return (
     <div className="mx-auto max-w-md px-4 py-16">
       <h1 className="text-3xl font-bold tracking-tight">Get Started</h1>
-      <p className="mt-2 text-muted-foreground">Create your Discover account in less than a minute.</p>
+      <p className="mt-2 text-muted-foreground">Create your {brand.name} account in less than a minute.</p>
 
       <form onSubmit={handleSubmit} className="mt-8 space-y-4 rounded-xl border border-border bg-card p-6">
         <Input
@@ -88,4 +90,3 @@ export default function GetStartedPage() {
     </div>
   )
 }
-

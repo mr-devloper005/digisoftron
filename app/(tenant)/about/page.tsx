@@ -1,10 +1,12 @@
 import { companyOverview, teamMembers } from '@/lib/mock/site-content'
+import { getSiteConfig } from '@/lib/tenant/config'
 
 export default function AboutPage() {
+  const { brand } = getSiteConfig()
   return (
     <div className="py-10 lg:py-14">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-        <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">About Discover</h1>
+        <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">About {brand.name}</h1>
         <p className="mt-4 text-lg text-muted-foreground">{companyOverview.mission}</p>
 
         <div className="mt-8 grid gap-4 sm:grid-cols-3">
@@ -36,4 +38,3 @@ export default function AboutPage() {
     </div>
   )
 }
-

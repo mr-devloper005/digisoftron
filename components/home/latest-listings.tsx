@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { ListingCard } from '@/components/cards/listing-card'
 import { useLatestListings } from '@/lib/hooks/use-posts'
+import { useTenant } from '@/lib/tenant/context'
 import type { Listing } from '@/types/post'
 
 interface LatestListingsProps {
@@ -13,6 +14,7 @@ interface LatestListingsProps {
 }
 
 export function LatestListings({ listings: initialListings }: LatestListingsProps) {
+  const { latestListings } = useTenant()
   const shouldUseHook = !initialListings
   const { data, isLoading } = useLatestListings({
     enabled: shouldUseHook,
@@ -33,15 +35,15 @@ export function LatestListings({ listings: initialListings }: LatestListingsProp
         <div className="mb-8 flex items-center justify-between">
           <div>
             <h2 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
-              New on digisoftron.com
+              {latestListings.title}
             </h2>
             <p className="mt-1 text-muted-foreground">
-              Fresh listings for agencies, local services, and business offers.
+              {latestListings.subtitle}
             </p>
           </div>
           <Button variant="ghost" asChild className="hidden sm:flex">
             <Link href="/listings" className="gap-2">
-              View all
+              {latestListings.ctaLabel}
               <ArrowRight className="h-4 w-4" />
             </Link>
           </Button>
@@ -60,7 +62,7 @@ export function LatestListings({ listings: initialListings }: LatestListingsProp
         <div className="mt-6 text-center sm:hidden">
           <Button variant="outline" asChild>
             <Link href="/listings" className="gap-2">
-              View all listings
+              {latestListings.ctaMobileLabel}
               <ArrowRight className="h-4 w-4" />
             </Link>
           </Button>

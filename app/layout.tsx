@@ -4,6 +4,7 @@ import { Geist, Geist_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { QueryProvider } from '@/lib/providers/query-provider'
 import { TenantProvider } from '@/lib/tenant/context'
+import { getSiteConfig } from '@/lib/tenant/config'
 import './globals.css'
 
 const geistSans = Geist({ 
@@ -15,17 +16,19 @@ const geistMono = Geist_Mono({
   variable: '--font-geist-mono',
 })
 
+const siteConfig = getSiteConfig()
+
 export const metadata: Metadata = {
   title: {
-    default: 'Discover - Stories, Galleries & Experiences',
-    template: '%s | Discover',
+    default: siteConfig.metadata.title,
+    template: siteConfig.metadata.titleTemplate,
   },
-  description: 'Discover curated articles, stunning photo galleries, and unique experiences worth sharing.',
-  keywords: ['articles', 'galleries', 'listings', 'experiences', 'curated content'],
-  authors: [{ name: 'Discover Team' }],
+  description: siteConfig.metadata.description,
+  keywords: siteConfig.metadata.keywords,
+  authors: siteConfig.metadata.authors.map((name) => ({ name })),
   openGraph: {
-    title: 'Discover - Stories, Galleries & Experiences',
-    description: 'Discover curated articles, stunning photo galleries, and unique experiences worth sharing.',
+    title: siteConfig.metadata.ogTitle,
+    description: siteConfig.metadata.ogDescription,
     type: 'website',
   },
 }

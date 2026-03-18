@@ -9,13 +9,7 @@ import { Input } from '@/components/ui/input'
 import { cn } from '@/lib/utils'
 import { useUIStore } from '@/lib/stores/ui-store'
 import { useAuthStore } from '@/lib/stores/auth-store'
-
-const navLinks = [
-  { href: '/', label: 'Home' },
-  { href: '/listings', label: 'Listings' },
-  { href: '/about', label: 'About' },
-  { href: '/contact', label: 'Contact' },
-]
+import { useTenant } from '@/lib/tenant/context'
 
 export function Header() {
   const [isSearchExpanded, setIsSearchExpanded] = useState(false)
@@ -23,6 +17,7 @@ export function Header() {
   const pathname = usePathname()
   const { isMobileNavOpen, setMobileNavOpen, searchQuery, setSearchQuery } = useUIStore()
   const { session, signOut } = useAuthStore()
+  const { navLinks, brand, auth, search } = useTenant()
 
   const trimmedQuery = useMemo(() => searchQuery.trim(), [searchQuery])
 
@@ -58,11 +53,11 @@ export function Header() {
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <Link href="/" className="flex items-center gap-3 text-xl font-semibold tracking-tight text-foreground">
           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-foreground">
-            <span className="text-sm font-bold text-background">D</span>
+            <span className="text-sm font-bold text-background">{brand.logoLetter}</span>
           </div>
           <div className="flex flex-col leading-none">
-            <span className="hidden sm:inline">digisoftron.com</span>
-            <span className="hidden text-xs font-normal text-muted-foreground sm:inline">Listing marketplace</span>
+            <span className="hidden sm:inline">{brand.name}</span>
+            <span className="hidden text-xs font-normal text-muted-foreground sm:inline">{brand.tagline}</span>
           </div>
         </Link>
 
@@ -85,7 +80,7 @@ export function Header() {
                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
                   type="search"
-                  placeholder="Search listings instantly..."
+                  placeholder={search.placeholder}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="h-9 w-full pl-9 pr-8"
@@ -116,19 +111,19 @@ export function Header() {
           {session ? (
             <>
               <Button variant="outline" size="sm" asChild>
-                <Link href="/dashboard">Dashboard</Link>
+                <Link href="/dashboard">{auth.dashboardLabel}</Link>
               </Button>
               <Button size="sm" onClick={signOut}>
-                Sign Out
+                {auth.signOutLabel}
               </Button>
             </>
           ) : (
             <>
               <Button variant="outline" size="sm" asChild>
-                <Link href="/signin">Sign In</Link>
+                <Link href={auth.signInHref}>{auth.signInLabel}</Link>
               </Button>
               <Button size="sm" asChild>
-                <Link href="/get-started">Get Started</Link>
+                <Link href={auth.getStartedHref}>{auth.getStartedLabel}</Link>
               </Button>
             </>
           )}
@@ -147,7 +142,7 @@ export function Header() {
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
                 type="search"
-                placeholder="Search listings instantly..."
+                placeholder={search.placeholder}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-9"
@@ -170,19 +165,25 @@ export function Header() {
               {session ? (
                 <>
                   <Button variant="outline" className="flex-1" asChild>
-                    <Link href="/dashboard" onClick={() => setMobileNavOpen(false)}>Dashboard</Link>
+                    <Link href="/dashboard" onClick={() => setMobileNavOpen(false)}>
+                      {auth.dashboardLabel}
+                    </Link>
                   </Button>
                   <Button className="flex-1" onClick={signOut}>
-                    Sign Out
+                    {auth.signOutLabel}
                   </Button>
                 </>
               ) : (
                 <>
                   <Button variant="outline" className="flex-1" asChild>
-                    <Link href="/signin" onClick={() => setMobileNavOpen(false)}>Sign In</Link>
+                    <Link href={auth.signInHref} onClick={() => setMobileNavOpen(false)}>
+                      {auth.signInLabel}
+                    </Link>
                   </Button>
                   <Button className="flex-1" asChild>
-                    <Link href="/get-started" onClick={() => setMobileNavOpen(false)}>Get Started</Link>
+                    <Link href={auth.getStartedHref} onClick={() => setMobileNavOpen(false)}>
+                      {auth.getStartedLabel}
+                    </Link>
                   </Button>
                 </>
               )}
